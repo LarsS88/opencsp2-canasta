@@ -6,7 +6,7 @@ PHP=php
 GIT=git
 
 #The branch/ref from which we want to install the open csp framework
-CSP_BRANCH=main
+CSP_BRANCH=REL1_39
 
 main ()
 {
@@ -134,16 +134,26 @@ setup_localsettings()
     echo "\$GLOBALS['smwgElasticsearchEndpoints'] = [ 'elasticsearch:9200' ];" >> CanastaDefaultSettings.php
     
     # Also create the `images/temp` folder if it does not exist yet.
-    mkdir -p images/temp
-    chmod a+rwx images/temp
+    { mkdir -vp images/temp; chmod -v a+rwx images/temp; } 2>/dev/null
 }
 
 do_composer()
 {
     #5. Add the public WikibaseSolutions repository to your `composer.json` and run `composer update --no-dev` twice to install all required extensions and dependencies.
     $COMPOSER config repositories.38 composer https://gitlab.wikibase.nl/api/v4/group/38/-/packages/composer/ || exit_with_message
+    # Important, prioritization
+    _packagist='
+    {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.org"
+        },
+    '
+    packagist=$(echo "$_packagist" | sed "s/'/\\\\'/g")
+    sed -i "/\"repositories\": \[/ { n; s/^\s*{/,$packagist/" composer.json
     $COMPOSER update --no-dev || exit_with_message
     $COMPOSER update --no-dev || exit_with_message
+    $COMPOSER update --no-dev || exit_with_message # To remedy a seemingly random inconsistency in installing select dependencies
 }
 
 succes_message()

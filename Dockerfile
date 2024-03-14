@@ -1,5 +1,7 @@
 FROM ghcr.io/canastawiki/canasta:latest AS base
 
+#ENV COMPOSER_ALLOW_SUPERUSER=1
+
 COPY ./LocalSettings.default.php /var/www/mediawiki/w/LocalSettings.default.php
 COPY ./scripts/install-open-csp-canasta-compile.sh /
 COPY ./scripts/install-open-csp-canasta-runtime.sh /
