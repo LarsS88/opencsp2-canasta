@@ -35,7 +35,7 @@ chmod -v +x extensions/Scribunto/includes/engines/LuaStandalone/binaries/lua5_1_
 mkdir images/temp
 chmod 777 images/temp
 
-php maintenance/update.php
+php maintenance/update.php --quick
 php extensions/SemanticMediaWiki/maintenance/updateEntityCountMap.php
 php extensions/SemanticMediaWiki/maintenance/setupStore.php
 php extensions/SemanticMediaWiki/maintenance/rebuildElasticIndex.php
